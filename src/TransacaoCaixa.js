@@ -5,11 +5,11 @@ import Table from "./view/Table.jsx"
 const baseUrl = "http://localhost:3001/transacaoCaixa"; 
 
 
-function TransacoesCaixa() {
+function TransacaoCaixa() {
  const [data, setData] = React.useState([]);
  const columns = useMemo(
-            () => [{Header: "InvestTech", columns: [ {Header: "Fundo", accessor: "name_fund"}, 
-                  {Header: "Descricao", accessor: "desc_fund"}, {Header: "Data de Cadastro", accessor: "creation_date"}]}], []
+            () => [{Header: "InvestTech", columns: [ {Header: "Fundo", accessor: "name_fund"}, {Header: "Descrição: ", accessor: "desc_transaction"}, 
+                  {Header: "Valor da Transação", accessor: "valor_transaction"}, {Header: "Data: ", accessor: "data_transection"}]}], []
   );
  React.useEffect(() => {
     axios
@@ -27,4 +27,4 @@ function TransacoesCaixa() {
   );
 }
 
-export default TransacoesCaixa;
+export default TransacaoCaixa;

@@ -19,7 +19,9 @@ function MyNavBar() {
             </NavDropdown>
             <NavDropdown title="Transações Caixa" id="basic-nav-dropdown">
               <NavDropdown.Item >Nova Transação</NavDropdown.Item>
-              <NavDropdown.Item href="/TransacoesCaixa" >Listar Transações</NavDropdown.Item>
+              <NavDropdown.Item href="/transacaoCaixa" > 
+                    Listar Transações
+              </NavDropdown.Item>
             </NavDropdown>
             <NavDropdown title="Transacões de Ativos" id="basic-nav-dropdown">
               <NavDropdown.Item >Nova Transação</NavDropdown.Item>
