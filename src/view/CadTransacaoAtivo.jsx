@@ -8,20 +8,27 @@ import Button from 'react-bootstrap/Button';
 import axios from "axios";
 
 /* values to send to the api*/
-const initialValue = {desc_transaction: "", valor_transaction: "", data_transection: "",  fund_id: ""};
+const initialValue = {desc_transaction: "", value_transaction: "", date_transaction: "",  fund_id: "", security_id: "", quantity: ""};
 
 /* Link do request the api*/
-const baseUrl = "http://localhost:3001/fundos"; 
 
 const FundCreation = () => {
   const [values, setValues] = useState(initialValue);
-  const [data, setData] = useState([]);
+  const [funds, setFunds] = useState([]);
+  const [security, setSecuritys] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
       axios
-        .get(baseUrl)
-          .then((resp) => { setData(resp.data); })
+        .get("http://localhost:3001/funds")
+          .then((resp) => { setFunds(resp.data); })
+          .catch((err) => { console.log(err); });
+    }, []);
+
+  useEffect(() => {
+      axios
+        .get("http://localhost:3001/securities")
+          .then((resp) => { setSecuritys(resp.data); })
           .catch((err) => { console.log(err); });
     }, []);
   
@@ -32,13 +39,14 @@ const FundCreation = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    axios.post("http://localhost:3001/cash_transactions.json", {cash_transaction: values}) 
+    axios.post("http://localhost:3001/securitys_transactions.json", {security_transactions: values}) 
       .then((response) => {
-        navigate("/transacaoCaixa")
+        navigate("/transacaoAtivos") 
       })
       .catch((err) => {
         console.log(err);
-      }); 
+      });
+    console.log(values);
   }
 
   return (
@@ -53,14 +61,20 @@ const FundCreation = () => {
         <Row>
             <Form.Group className="mb-3" controlId="formInputDesc">
             <Form.Label>Valor:</Form.Label>
-            <Form.Control requires name="valor_transaction" type="text" placeholder="Descrição"  onChange={onChangeEvent} />
+            <Form.Control requires name="value_transaction" type="text" placeholder="Descrição"  onChange={onChangeEvent} />
+          </Form.Group>
+        </Row>
+        <Row>
+            <Form.Group className="mb-3" controlId="formInputDesc">
+            <Form.Label>Quantidade:</Form.Label>
+            <Form.Control requires name="quantity" type="text" placeholder="Quantidade"  onChange={onChangeEvent} />
           </Form.Group>
         </Row>
         <Row>
           <Col>
             <Form.Group className="mb-3" controlId="formINputDate">
               <Form.Label>Data de efetuação:</Form.Label>
-              <Form.Control required name="data_transection" type="date" onChange={onChangeEvent} />
+              <Form.Control required name="date_transaction" type="date" onChange={onChangeEvent} />
             </Form.Group>
           </Col>
           <Col></Col>
@@ -72,8 +86,23 @@ const FundCreation = () => {
               <Form.Label htmlFor="disabledSelect">Selecione o Fundo</Form.Label>
               <Form.Select id="disabledSelect" name="fund_id" onChange={onChangeEvent}> 
                 <option>Selecione o Fundo</option>
-                {data.map((e) => {
+                {funds.map((e) => {
                   return (<option value={e.id} name="fund_id">{e.name_fund}</option>)
+                })}
+              </Form.Select>
+            </Form.Group>
+          </Col>
+          <Col></Col>
+          <Col></Col>
+         </Row>
+        <Row>
+          <Col>
+            <Form.Group className="mb-3">
+              <Form.Label htmlFor="disabledSelect">Selecione o Ativo</Form.Label>
+              <Form.Select id="disabledSelect" name="security_id" onChange={onChangeEvent}> 
+                <option>Selecione o Ativo</option>
+                {security.map((e) => {
+                  return (<option value={e.id} name="security_id">{e.security_simbol}</option>)
                 })}
               </Form.Select>
             </Form.Group>

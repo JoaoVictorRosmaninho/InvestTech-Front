@@ -27,12 +27,17 @@ function MyNavBar() {
               </NavDropdown.Item>
             </NavDropdown>
             <NavDropdown title="Transacões de Ativos" id="basic-nav-dropdown">
-              <NavDropdown.Item >Nova Transação</NavDropdown.Item>
+              <NavDropdown.Item href="/TransacaoAtivos/new">Nova Transação</NavDropdown.Item>
               <NavDropdown.Item href="/TransacaoAtivos">Listar Transações</NavDropdown.Item>
             </NavDropdown>
             <NavDropdown title="Ativos" id="basic-nav-dropdown">
               <NavDropdown.Item href="/Ativos/new">Novo Ativo</NavDropdown.Item>
               <NavDropdown.Item href="/Ativos">Listar Ativos</NavDropdown.Item>
+              <NavDropdown.Item href="/Ativos">Histórico de preços</NavDropdown.Item>
+            </NavDropdown>
+            <NavDropdown title="Blockchain" id="basic-nav-dropdown">
+              <NavDropdown.Item href="/Ativos/new">Salvar relatório</NavDropdown.Item>
+              <NavDropdown.Item href="/Ativos">Acessar relatório</NavDropdown.Item>
             </NavDropdown>
         </Nav>
     </Navbar.Collapse>

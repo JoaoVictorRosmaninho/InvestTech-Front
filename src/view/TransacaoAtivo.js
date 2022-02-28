@@ -13,11 +13,13 @@ function TransacaoCaixa() {
                 {Header: "Fundo", accessor: "name_fund"}, 
                 {Header: "Descrição: ", accessor: "desc_transaction"}, 
                 {Header: "Valor da Transação", accessor: "value_transaction"}, 
+                {Header: "Quantidade", accessor: "quantity"}, 
                 {Header: "Simbolo", accessor: "security_simbol"}, 
                 {Header: "Data: ", accessor: "date_transaction"}, 
                 {Header: "Ações"}
               ]
             }], []);
+
  React.useEffect(() => {
     axios
       .get(baseUrl)

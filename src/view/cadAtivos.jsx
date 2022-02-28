@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; 
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
 import Form from 'react-bootstrap/Form'
 import Container from 'react-bootstrap/Container';
@@ -8,13 +8,13 @@ import Button from 'react-bootstrap/Button';
 import axios from "axios"; 
 
 
-const initialValue = {name_fund: "", desc_fund: "", creation_date: ""};
+const initialValue = {security_simbol: "", security_desc: "", creation_date: ""};
 
 
 const FundCreation = () => {
   const [values, setValues] = useState(initialValue);
   const navigate = useNavigate();
-  
+
   const onChangeEvent = (e) => {
     const {name, value} = e.target
     setValues({...values, [name]:value});
@@ -22,13 +22,14 @@ const FundCreation = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    axios.post("http://localhost:3001/funds.json", {fund: values}) 
+    axios.post("http://localhost:3001/securities.json", {security: values}) 
       .then((response) => {
-        navigate("/Fundos")
+        navigate("/Ativos")
       })
       .catch((err) => {
         console.log(err);
       }); 
+    console.log(values);
   }
 
   return (
@@ -36,12 +37,12 @@ const FundCreation = () => {
       <Form>
         <Row>
           <Form.Group className="mb-3" controlId="formInputNameFund">
-            <Form.Label>Nome do Fundo</Form.Label>
-          <Form.Control required name="name_fund" type="text" placeholder="Entre com o Nome do Fundo" onChange={onChangeEvent} />
+            <Form.Label>Simbolo do Ativo</Form.Label>
+          <Form.Control required name="security_simbol" type="text" placeholder="Entre com o simbolo do ativo" onChange={onChangeEvent} />
           </Form.Group>
             <Form.Group className="mb-3" controlId="formInputDesc">
-            <Form.Label>Descrição sobre o fundo:</Form.Label>
-            <Form.Control requires name="desc_fund" type="text" placeholder="Descrição"  onChange={onChangeEvent} />
+            <Form.Label>Descrição do ativo</Form.Label>
+            <Form.Control requires name="security_desc" type="text" placeholder="Descrição"  onChange={onChangeEvent} />
           </Form.Group>
         </Row>
         <Row>
