@@ -19,7 +19,9 @@ function MyNavBar() {
               </NavDropdown.Item>
             </NavDropdown>
             <NavDropdown title="Transações Caixa" id="basic-nav-dropdown">
-              <NavDropdown.Item >Nova Transação</NavDropdown.Item>
+              <NavDropdown.Item href="/transacaoCaixa/new">
+                    Nova Transação
+              </NavDropdown.Item>
               <NavDropdown.Item href="/transacaoCaixa" > 
                     Listar Transações
               </NavDropdown.Item>
@@ -29,8 +31,8 @@ function MyNavBar() {
               <NavDropdown.Item href="/TransacaoAtivos">Listar Transações</NavDropdown.Item>
             </NavDropdown>
             <NavDropdown title="Ativos" id="basic-nav-dropdown">
-              <NavDropdown.Item >Novo Ativo</NavDropdown.Item>
-              <NavDropdown.Item href="/TransacaoAtivos">Listar Ativos</NavDropdown.Item>
+              <NavDropdown.Item href="/Ativos/new">Novo Ativo</NavDropdown.Item>
+              <NavDropdown.Item href="/Ativos">Listar Ativos</NavDropdown.Item>
             </NavDropdown>
         </Nav>
     </Navbar.Collapse>
