@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, {useMemo} from "react";
 import Table from "../components/Table.jsx"
+import Buttons from '../components/Buttons.jsx'
 import { useNavigate } from 'react-router-dom'
 
 const baseUrl = "http://localhost:3001/ativos"; 
@@ -16,9 +17,10 @@ function Fundos() {
                 {Header: "Ativo", accessor: "security_simbol"}, 
                 {Header: "Descricao", accessor: "security_desc"}, 
                 {Header: "Data de Cadastro", accessor: "creation_date"}, 
-                {Header: "Ações"}]}], []);
+                {Header: "Ações", Cell: ({row}) => ( <Buttons id={row.values.id} nav="/Ativos/edit" sendTo="securities"/> )}
+              ]}], []);
 
-  const Delete = (v) => {
+ /* const Delete = (v) => {
    if (window.confirm("Tem certeza ?")) {
    axios.delete(`http://localhost:3001/securities/${v}.json`)
       .then(() => {
@@ -32,7 +34,7 @@ function Fundos() {
   const Nav = (v) => {
     navigate(`/Ativos/edit/${v}`)
   }
-
+*/
   React.useEffect(() => {
     axios
       .get(baseUrl)
@@ -45,7 +47,7 @@ function Fundos() {
   }, []);
 
   return (
-      <Table columns={columns} data={data} del={Delete} nav={Nav}/> 
+      <Table columns={columns} data={data} /> 
   );
 }
 

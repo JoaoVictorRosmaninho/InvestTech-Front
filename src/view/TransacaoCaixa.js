@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, {useMemo} from "react";
 import Table from "../components//Table.jsx"
 import { useNavigate } from 'react-router-dom'
+import Buttons from '../components/Buttons.jsx'
 
 const baseUrl = "http://localhost:3001/transacaoCaixa"; 
 
@@ -17,27 +18,11 @@ function TransacaoCaixa() {
               {Header: "Descrição: ", accessor: "desc_transaction"},  
               {Header: "Valor da Transação", accessor: "valor_transaction"}, 
               {Header: "Data: ", accessor: "data_transection"},  
-              {Header: "Ações"}]
-            }], []);
+              {Header: "Ações", Cell: ({row}) => ( <Buttons id={row.values.id} nav="/transacaoCaixa/edit" sendTo="transacaoCaixa"/> )}
+            ]
+          }
+        ], []);
    
-  const Delete = (v) => {
-   if (window.confirm("Tem certeza ?")) {
-    axios.delete(`http://localhost:3001/transacaoCaixa/${v}.json`)
-      .then(() => {
-        navigate("/transacaoCaixa")
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-  }
-}
-
-  const Nav = (v) => {
-    navigate(`/transacaoCaixa/edit/${v}`)
-  }
-
-
-
   React.useEffect(() => {
     axios
       .get(baseUrl)
@@ -50,7 +35,7 @@ function TransacaoCaixa() {
   }, []);
 
   return (
-      <Table columns={columns} data={data} del={Delete} nav={Nav}/> 
+      <Table columns={columns} data={data}/> 
   );
 }
 

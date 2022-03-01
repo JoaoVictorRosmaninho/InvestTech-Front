@@ -1,11 +1,8 @@
-import React from 'react'
 import BTable from 'react-bootstrap/Table';
 import { useTable, useFilters, useGlobalFilter} from 'react-table';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
-import Button from 'react-bootstrap/Button';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'
 
 function GlobalFilter({filter, setFilter}) {
   return (
@@ -14,29 +11,14 @@ function GlobalFilter({filter, setFilter}) {
   )
 }
 
-function Table({ columns, data, del, nav }) {
+function Table({ columns, data, Del, Nav }) {
   const { getTableProps, headerGroups, rows, prepareRow, state, setGlobalFilter } = useTable({
     columns,
     data,
   }, useGlobalFilter); 
 
   const { globalFilter } = state;
-  let id = 0;
-  const navigate = useNavigate();
   
-  const Delete = (v) => {
-   axios.delete(`http://localhost:3001/funds/${v}.json`)
-      .then(() => {
-        navigate("/Fundos")
-    })
-      .catch((err) => {
-        console.log(err);
-      })
-  } 
- /* const Edit = (v) => {
-
-  }
-  */
   return (
   <Container fluid="sm">
     <Row className="mt-4">
@@ -59,16 +41,6 @@ function Table({ columns, data, del, nav }) {
           return (
             <tr {...row.getRowProps()}>
               {row.cells.map(cell => {
-              if (cell.column.Header === "id") {
-                  id = cell.value
-                } 
-                if (cell.column.Header == "Ações")
-                  return (
-                  <td {...cell.getCellProps()} Style="display:flex;justify-content:space-evenly;">
-                    <Button variant="primary" value={id} onClick={(e) => {nav(e.target.value)}}>Editar</Button>
-                    <Button variant="danger" value={id} onClick={(e) => {del(e.target.value)}}>Apagar</Button>
-                  </td>
-                );
                 return (
                   <td {...cell.getCellProps()} Style="text-align:center">
                     {cell.render('Cell')}

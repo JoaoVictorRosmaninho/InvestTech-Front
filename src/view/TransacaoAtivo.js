@@ -3,6 +3,7 @@ import React, {useMemo} from "react";
 import Table from "../components/Table.jsx"
 import { useNavigate } from 'react-router-dom'
 import CurrencyFormat from 'react-currency-format';
+import Buttons from '../components/Buttons.jsx'
 
 const baseUrl = "http://localhost:3001/transacaoAtivos"; 
 
@@ -18,34 +19,18 @@ function TransacaoAtivo() {
                 {Header: "id", accessor: "id"}, 
                 {Header: "Fundo", accessor: "name_fund"}, 
                 {Header: "Descrição: ", accessor: "desc_transaction"}, 
-                {Header: "Valor", accessor: "value_transaction"}, 
+                {Header: "Valor", accessor: "value_transaction", Cell: ({row}) => (<CurrencyFormat value={row.values.value_transaction} displayType={'text'} thousandSeparator={true} prefix={'R$'} />)}, 
                 {Header: "Quantidade", accessor: "quantity"}, 
                 {Header: "Simbolo", accessor: "security_simbol"}, 
                 {Header: "Data: ", accessor: "date_transaction"}, 
-                {Header: "Total ", accessor: row => [row.value_transaction, row.quantity].reduce((mult, current) => {
-                  let number = Number.parseFloat(mult) * Number.parseFloat(current); 
-                  return number.toLocaleString();
-                }, 1)},
-                {Header: "Ações"}
+                {Header: "Total ", Cell: ({row})  => 
+                  (
+                    <CurrencyFormat value={Number(row.values.value_transaction) * Number(row.values.quantity)} displayType={'text'} thousandSeparator={true} prefix={'R$'} />
+                  )},
+                {Header: "Ações", Cell: ({row}) => ( <Buttons id={row.values.id} nav="/transacaoAtivos/edit" sendTo="securitys_transactions"/> )}
               ]
             }], []);
-  
-  const Delete = (v) => {
-   if (window.confirm("Tem certeza ?")) {
-      console.log(v);
-      axios.delete(`http://localhost:3001/securitys_transactions/${v}.json`)
-      .then((resp) => {
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-  }
-} 
-
-  const Nav = (v) => {
-    navigate(`/transacaoAtivos/edit/${v}`)
-  }
- 
+   
   React.useEffect(() => {
     axios
       .get(baseUrl)
@@ -58,7 +43,7 @@ function TransacaoAtivo() {
   }, []);
 
   return (
-      <Table columns={columns} data={data}  del={Delete}  nav={Nav} /> 
+      <Table columns={columns} data={data} /> 
   );
 }
 

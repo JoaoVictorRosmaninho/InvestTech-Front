@@ -48,7 +48,7 @@ const CadPrecoAtivo = () => {
     const method = id ? "put" : "post";
     axios[method](`http://localhost:3001/securitys_closing_prices${id ? `/${id}` : ''}.json`, {securitys_closing_price: values}) 
       .then((response) => {
-    navigate("/Ativos")
+    navigate("/Ativos/precos/historico")
       })
       .catch((err) => {
         console.log(err);
@@ -79,6 +79,7 @@ const CadPrecoAtivo = () => {
             <Form.Group className="mb-3">
               <Form.Label htmlFor="disabledSelect">Selecione o Ativo</Form.Label>
               <Form.Select id="disabledSelect" name="security_id" onChange={onChangeEvent}>
+                <option>Selecione um Ativo</option>
                 {data.map((e) => {
                 if (id) {
                   if (e.id == values.security_id) 

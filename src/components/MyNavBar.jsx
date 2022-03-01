@@ -14,9 +14,7 @@ function MyNavBar() {
         <Nav className="me-auto">
             <NavDropdown title="Fundos" id="basic-nav-dropdown">
               <NavDropdown.Item href="/Fundos/new">Cadastrar Fundos</NavDropdown.Item>
-              <NavDropdown.Item href="/Fundos">
-                  Listar Fundos
-              </NavDropdown.Item>
+              <NavDropdown.Item href="/Fundos">Listar Fundos</NavDropdown.Item>
             </NavDropdown>
             <NavDropdown title="Transações Caixa" id="basic-nav-dropdown">
               <NavDropdown.Item href="/transacaoCaixa/new">
@@ -39,6 +37,10 @@ function MyNavBar() {
             <NavDropdown title="Blockchain" id="basic-nav-dropdown">
               <NavDropdown.Item href="/Ativos/new">Salvar relatório</NavDropdown.Item>
               <NavDropdown.Item href="/Ativos">Acessar relatório</NavDropdown.Item>
+            </NavDropdown>
+            <NavDropdown title="Relatórios" id="basic-nav-dropdown">
+              <NavDropdown.Item href="/Relatorios/fundos">Fundos</NavDropdown.Item>
+              <NavDropdown.Item href="#">Ativos</NavDropdown.Item>
             </NavDropdown>
         </Nav>
     </Navbar.Collapse>

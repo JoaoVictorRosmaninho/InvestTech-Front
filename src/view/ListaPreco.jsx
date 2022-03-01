@@ -1,6 +1,8 @@
 import axios from 'axios';
 import React, {useMemo} from "react";
 import Table from "../components//Table.jsx"
+import Buttons from '../components/Buttons.jsx'
+import CurrencyFormat from 'react-currency-format';
 import { useNavigate } from 'react-router-dom'
 
 const baseUrl = "http://localhost:3001/precos/historico"; 
@@ -14,29 +16,12 @@ function TransacaoCaixa() {
             columns: [ 
               {Header: "id", accessor: "id"}, 
               {Header: "Ativo", accessor: "security_simbol"}, 
-              {Header: "Valor", accessor: "closing_price"}, 
+              {Header: "Valor", accessor: "closing_price", Cell: ({row}) => (<CurrencyFormat value={row.values.closing_price} displayType={'text'} thousandSeparator={true} prefix={'R$'} />)}, 
               {Header: "Data: ", accessor: "date_closing"},  
-              {Header: "Ações"}]
+              {Header: "Ações", Cell: ({row}) => ( <Buttons id={row.values.id} nav="/Ativos/precos/edit" sendTo="securitys_closing_prices"/> )}
+            ]
             }], []);
-   
-  const Delete = (v) => {
-   if (window.confirm("Tem certeza ?")) {
-    axios.delete(`http://localhost:3001/securitys_closing_prices/${v}.json`)
-      .then(() => {
-        navigate("/Ativos/precos/historico")
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-  }
-}
-
-  const Nav = (v) => {
-    navigate(`/Ativos/precos/edit/${v}`)
-  }
-
-
-
+  
   React.useEffect(() => {
     axios
       .get(baseUrl)
@@ -49,7 +34,7 @@ function TransacaoCaixa() {
   }, []);
 
   return (
-      <Table columns={columns} data={data} del={Delete} nav={Nav}/> 
+      <Table columns={columns} data={data} /> 
   );
 }
 

@@ -95,6 +95,7 @@ const TransactionSecurity = () => {
             <Form.Group className="mb-3">
               <Form.Label htmlFor="disabledSelect">Selecione o Fundo</Form.Label>
               <Form.Select id="disabledSelect" name="fund_id" onChange={onChangeEvent}> 
+                <option>Selecione o fundo</option>
                 {funds.map((e) => {
                     if (id) {
                         if (values.fund_id == e.id)
@@ -113,6 +114,7 @@ const TransactionSecurity = () => {
             <Form.Group className="mb-3">
               <Form.Label htmlFor="disabledSelect">Selecione o Ativo</Form.Label>
               <Form.Select id="disabledSelect" name="security_id" onChange={onChangeEvent}> 
+                <option>Selecione o Ativo</option>
                 {security.map((e) => {
                     if (id) {
                       if (e.id == values.security_id) 

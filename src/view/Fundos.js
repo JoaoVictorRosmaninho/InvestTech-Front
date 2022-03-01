@@ -1,39 +1,32 @@
 import axios from 'axios';
 import React, {useMemo} from "react";
 import Table from "../components/Table.jsx"
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
+import Buttons from '../components/Buttons.jsx'
 
 const baseUrl = "http://localhost:3001/fundos"; 
-
 
 function Fundos() {
  const [data, setData] = React.useState([]);
  const navigate = useNavigate();
  const columns = useMemo(
-            () => [{Header: "InvestTech",
-              columns: [ 
+            () => 
+   [
+     {
+       Header: "InvestTech",
+              columns: 
+              [ 
                 {Header: "id", accessor: "id"}, 
-                {Header: "Fundo", accessor: "name_fund"}, 
+                {Header: "Fundo", accessor: "name_fund", 
+                 Cell: ({row}) => (<Link to={`/Relatorios/fundos/${row.values.id}`}>{row.values.name_fund}</Link>)
+                }, 
                 {Header: "Descricao", accessor: "desc_fund"}, 
                 {Header: "Data de Cadastro", accessor: "creation_date"}, 
-                {Header: "Ações"}]}], []
-  );
+                {Header: "Ações", Cell: ({row}) => ( <Buttons id={row.values.id} nav="/Fundos/edit" sendTo="funds"/> )}
+              ]
+     }
+   ], []);
 
-  const Delete = (v) => {
-   if (window.confirm("Tem certeza ?")) {
-   axios.delete(`http://localhost:3001/funds/${v}.json`)
-      .then(() => {
-        navigate("/Fundos")
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-  }
-}
-
-  const Nav = (v) => {
-    navigate(`/Fundos/edit/${v}`)
-  }
 
   React.useEffect(() => {
     axios
@@ -47,7 +40,7 @@ function Fundos() {
   }, []);
 
   return (
-      <Table columns={columns} data={data} del={Delete} nav={Nav} /> 
+      <Table columns={columns} data={data} /> 
   );
 }
 

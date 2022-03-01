@@ -86,6 +86,7 @@ const FundCreation = () => {
             <Form.Group className="mb-3">
               <Form.Label htmlFor="disabledSelect">Selecione o Fundo</Form.Label>
               <Form.Select id="disabledSelect" name="fund_id" onChange={onChangeEvent}>
+                <option>Selecione o fundo</option>
                 {data.map((e) => {
                 if (id) {
                   if (e.id == values.fund_id) 

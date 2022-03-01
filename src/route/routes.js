@@ -10,6 +10,7 @@ import Ativos from '../view/Ativos.jsx';
 import CAtivos from '../view/cadAtivos.jsx';
 import CPrice from '../view/cadPrecoAtivos.jsx';
 import LPrice from '../view/ListaPreco.jsx';
+import FundReports from '../view/FundReports.jsx';
 import Container from "react-bootstrap/Container";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -35,10 +36,14 @@ const Rotas = () => {
         <Route element={<CTransacaoAtivo/>} path="/transacaoAtivos/edit/:id" /> 
         
         <Route element={<CAtivos/>} path="/Ativos/new" /> 
+        <Route element={<CAtivos/>} path="/Ativos/edit/:id" /> 
         <Route element={<Ativos/>} path="/Ativos" /> 
         <Route element={<CPrice/>} path="/Ativos/precos/edit/:id" /> 
         <Route element={<CPrice/>} path="/Ativos/precos/new" /> 
         <Route element={<LPrice/>} path="/Ativos/precos/historico" /> 
+        
+        <Route element={<FundReports/>} path="/Relatorios/fundos"/> 
+    
       </Routes>
     </Container>
   </BrowserRouter>
