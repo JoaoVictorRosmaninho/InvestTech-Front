@@ -33,7 +33,8 @@ function MyNavBar() {
             <NavDropdown title="Ativos" id="basic-nav-dropdown">
               <NavDropdown.Item href="/Ativos/new">Novo Ativo</NavDropdown.Item>
               <NavDropdown.Item href="/Ativos">Listar Ativos</NavDropdown.Item>
-              <NavDropdown.Item href="/Ativos">Histórico de preços</NavDropdown.Item>
+              <NavDropdown.Item href="/Ativos/precos/new">Cadastrar Preços</NavDropdown.Item>
+              <NavDropdown.Item href="/Ativos/precos/historico">Histórico de preços</NavDropdown.Item>
             </NavDropdown>
             <NavDropdown title="Blockchain" id="basic-nav-dropdown">
               <NavDropdown.Item href="/Ativos/new">Salvar relatório</NavDropdown.Item>

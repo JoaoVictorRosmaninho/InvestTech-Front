@@ -3,7 +3,7 @@ import React, {useMemo} from "react";
 import Table from "../components//Table.jsx"
 import { useNavigate } from 'react-router-dom'
 
-const baseUrl = "http://localhost:3001/transacaoCaixa"; 
+const baseUrl = "http://localhost:3001/precos/historico"; 
 
 
 function TransacaoCaixa() {
@@ -13,18 +13,17 @@ function TransacaoCaixa() {
             () => [{Header: "InvestTech", 
             columns: [ 
               {Header: "id", accessor: "id"}, 
-              {Header: "Fundo", accessor: "name_fund"}, 
-              {Header: "Descrição: ", accessor: "desc_transaction"},  
-              {Header: "Valor da Transação", accessor: "valor_transaction"}, 
-              {Header: "Data: ", accessor: "data_transection"},  
+              {Header: "Ativo", accessor: "security_simbol"}, 
+              {Header: "Valor", accessor: "closing_price"}, 
+              {Header: "Data: ", accessor: "date_closing"},  
               {Header: "Ações"}]
             }], []);
    
   const Delete = (v) => {
    if (window.confirm("Tem certeza ?")) {
-    axios.delete(`http://localhost:3001/transacaoCaixa/${v}.json`)
+    axios.delete(`http://localhost:3001/securitys_closing_prices/${v}.json`)
       .then(() => {
-        navigate("/transacaoCaixa")
+        navigate("/Ativos/precos/historico")
       })
       .catch((err) => {
         console.log(err);
@@ -33,7 +32,7 @@ function TransacaoCaixa() {
 }
 
   const Nav = (v) => {
-    navigate(`/transacaoCaixa/edit/${v}`)
+    navigate(`/Ativos/precos/edit/${v}`)
   }
 
 

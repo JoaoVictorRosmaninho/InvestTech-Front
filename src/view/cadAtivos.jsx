@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom'
 import Form from 'react-bootstrap/Form'
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -14,6 +14,8 @@ const initialValue = {security_simbol: "", security_desc: "", creation_date: ""}
 const FundCreation = () => {
   const [values, setValues] = useState(initialValue);
   const navigate = useNavigate();
+  const {id} = useParams() || null;
+  const buttonText = id ? "Atualizar" : "Cadastrar"; 
 
   const onChangeEvent = (e) => {
     const {name, value} = e.target
@@ -22,7 +24,9 @@ const FundCreation = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    axios.post("http://localhost:3001/securities.json", {security: values}) 
+    const method = id ? "put" : "post";
+    
+    axios[method](`http://localhost:3001/securities${id ? `/${id}` : ''}.json`, {security: values}) 
       .then((response) => {
         navigate("/Ativos")
       })
@@ -31,6 +35,20 @@ const FundCreation = () => {
       }); 
     console.log(values);
   }
+  
+  useEffect(() => {
+  if (id) {
+   axios.get(`http://localhost:3001/securities/${id}.json`) 
+      .then((resp) => {
+         setValues(resp.data);
+      })
+      .catch((err) => {
+        console.log("Error: ", err); 
+      });
+  } 
+}, []);
+
+
 
   return (
   <Container fluid="sm" className="mt-4">
@@ -38,18 +56,18 @@ const FundCreation = () => {
         <Row>
           <Form.Group className="mb-3" controlId="formInputNameFund">
             <Form.Label>Simbolo do Ativo</Form.Label>
-          <Form.Control required name="security_simbol" type="text" placeholder="Entre com o simbolo do ativo" onChange={onChangeEvent} />
+          <Form.Control required name="security_simbol" type="text" placeholder="Entre com o simbolo do ativo" value={values.security_simbol} onChange={onChangeEvent} />
           </Form.Group>
             <Form.Group className="mb-3" controlId="formInputDesc">
             <Form.Label>Descrição do ativo</Form.Label>
-            <Form.Control requires name="security_desc" type="text" placeholder="Descrição"  onChange={onChangeEvent} />
+            <Form.Control requires name="security_desc" type="text" placeholder="Descrição" value={values.security_desc}  onChange={onChangeEvent} />
           </Form.Group>
         </Row>
         <Row>
           <Col>
             <Form.Group className="mb-3" controlId="formINputDate">
               <Form.Label>Data de criação:</Form.Label>
-              <Form.Control required name="creation_date" type="date" onChange={onChangeEvent} />
+              <Form.Control required name="creation_date" type="date" value={values.creation_date} onChange={onChangeEvent} />
             </Form.Group>
           </Col>
           <Col></Col>
@@ -57,7 +75,7 @@ const FundCreation = () => {
         </Row> 
         <Row>
           <Button type="submit" onClick={onSubmit}>
-            Cadastrar
+              {buttonText}
           </Button>
        </Row>
       </Form>
