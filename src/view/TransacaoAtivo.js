@@ -16,7 +16,7 @@ function TransacaoAtivo() {
  const columns = useMemo(
             () => [{Header: "InvestTech", 
               columns: [ 
-                {Header: "id", accessor: "id"}, 
+                {Header: "N°", accessor: "id",  Cell: ({row}) => (Number(row.id) + 1)}, 
                 {Header: "Fundo", accessor: "name_fund"}, 
                 {Header: "Descrição: ", accessor: "desc_transaction"}, 
                 {Header: "Valor", accessor: "value_transaction", Cell: ({row}) => (<CurrencyFormat value={row.values.value_transaction} displayType={'text'} thousandSeparator={true} prefix={'R$'} />)}, 
@@ -27,7 +27,7 @@ function TransacaoAtivo() {
                   (
                     <CurrencyFormat value={Number(row.values.value_transaction) * Number(row.values.quantity)} displayType={'text'} thousandSeparator={true} prefix={'R$'} />
                   )},
-                {Header: "Ações", Cell: ({row}) => ( <Buttons id={row.values.id} nav="/transacaoAtivos/edit" sendTo="securitys_transactions"/> )}
+                {Header: "Ações", Cell: ({row}) => ( <Buttons id={row.values.id} nav="/TransacaoAtivos" sendTo="securitys_transactions"/> )}
               ]
             }], []);
    

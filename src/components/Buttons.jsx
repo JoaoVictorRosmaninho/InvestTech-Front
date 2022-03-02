@@ -22,7 +22,7 @@ const Buttons = (props) => {
     }
 
   const Nav = (v) => {
-    navigate(`${props.nav}/${v}`)
+    navigate(`${props.nav}/edit/${v}`)
   }
 
   return (

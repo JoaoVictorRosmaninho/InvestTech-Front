@@ -40,9 +40,9 @@ const Rotas = () => {
         <Route element={<Ativos/>} path="/Ativos" /> 
         <Route element={<CPrice/>} path="/Ativos/precos/edit/:id" /> 
         <Route element={<CPrice/>} path="/Ativos/precos/new" /> 
-        <Route element={<LPrice/>} path="/Ativos/precos/historico" /> 
+        <Route element={<LPrice/>} path="/Ativos/precos" /> 
         
-        <Route element={<FundReports/>} path="/Relatorios/fundos"/> 
+        <Route element={<FundReports/>} path="/Fundos/demonstrativo/:id"/> 
     
       </Routes>
     </Container>

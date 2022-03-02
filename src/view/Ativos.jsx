@@ -13,11 +13,11 @@ function Fundos() {
  const columns = useMemo(
             () => [{Header: "InvestTech",
               columns: [ 
-                {Header: "id", accessor: "id"}, 
+                {Header: "N°", accessor: "id",  Cell: ({row}) => (Number(row.id) + 1)}, 
                 {Header: "Ativo", accessor: "security_simbol"}, 
                 {Header: "Descricao", accessor: "security_desc"}, 
                 {Header: "Data de Cadastro", accessor: "creation_date"}, 
-                {Header: "Ações", Cell: ({row}) => ( <Buttons id={row.values.id} nav="/Ativos/edit" sendTo="securities"/> )}
+                {Header: "Ações", Cell: ({row}) => ( <Buttons id={row.values.id} nav="/Ativos" sendTo="securities"/> )}
               ]}], []);
 
  /* const Delete = (v) => {

@@ -16,13 +16,13 @@ function Fundos() {
        Header: "InvestTech",
               columns: 
               [ 
-                {Header: "id", accessor: "id"}, 
+                {Header: "N°", accessor: "id",  Cell: ({row}) => (Number(row.id) + 1)}, 
                 {Header: "Fundo", accessor: "name_fund", 
-                 Cell: ({row}) => (<Link to={`/Relatorios/fundos/${row.values.id}`}>{row.values.name_fund}</Link>)
+                 Cell: ({row}) => (<Link to={`/Fundos/demonstrativo/${row.values.id}`}>{row.values.name_fund}</Link>)
                 }, 
                 {Header: "Descricao", accessor: "desc_fund"}, 
                 {Header: "Data de Cadastro", accessor: "creation_date"}, 
-                {Header: "Ações", Cell: ({row}) => ( <Buttons id={row.values.id} nav="/Fundos/edit" sendTo="funds"/> )}
+                {Header: "Ações", Cell: ({row}) => ( <Buttons id={row.values.id} nav="/Fundos" sendTo="funds"/> )}
               ]
      }
    ], []);

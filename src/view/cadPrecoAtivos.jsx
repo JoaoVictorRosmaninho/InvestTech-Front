@@ -48,7 +48,7 @@ const CadPrecoAtivo = () => {
     const method = id ? "put" : "post";
     axios[method](`http://localhost:3001/securitys_closing_prices${id ? `/${id}` : ''}.json`, {securitys_closing_price: values}) 
       .then((response) => {
-    navigate("/Ativos/precos/historico")
+    navigate("/Ativos/precos")
       })
       .catch((err) => {
         console.log(err);
