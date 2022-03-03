@@ -15,8 +15,8 @@ function TransacaoCaixa() {
               {Header: "N°", accessor: "id",  Cell: ({row}) => (Number(row.id) + 1)}, 
               {Header: "Fundo", accessor: "name_fund"}, 
               {Header: "Descrição: ", accessor: "desc_transaction"},  
-              {Header: "Valor da Transação", accessor: "valor_transaction", Cell:  ({row}) => (<CurrencyFormat value={row.values.valor_transaction} displayType={'text'} thousandSeparator={true} prefix={'R$'} />)}, 
-              {Header: "Data: ", accessor: "data_transection"},  
+              {Header: "Valor da Transação", accessor: "value_transaction", Cell:  ({row}) => (<CurrencyFormat value={row.values.value_transaction} displayType={'text'} thousandSeparator={true} prefix={'R$'} />)}, 
+              {Header: "Data: ", accessor: "date_transaction"},  
               {Header: "Ações", Cell: ({row}) => ( <Buttons id={row.values.id} nav="/transacaoCaixa" sendTo="transacaoCaixa"/> )}
             ]
           }

@@ -8,7 +8,7 @@ import Button from 'react-bootstrap/Button';
 import axios from "axios";
 
 /* values to send to the api*/
-const initialValue = {desc_transaction: "", valor_transaction: "", data_transection: "",  fund_id: ""};
+const initialValue = {desc_transaction: "", value_transaction: "", date_transaction: "",  fund_id: ""};
 
 /* Link do request the api*/
 const baseUrl = "http://localhost:3001/fundos"; 
@@ -68,14 +68,14 @@ const FundCreation = () => {
         <Row>
             <Form.Group className="mb-3" controlId="formInputDesc">
             <Form.Label>Valor:</Form.Label>
-            <Form.Control requires name="valor_transaction" type="text" placeholder="Valor" value={values.valor_transaction} onChange={onChangeEvent} />
+            <Form.Control requires name="value_transaction" type="text" placeholder="Valor" value={values.value_transaction} onChange={onChangeEvent} />
           </Form.Group>
         </Row>
         <Row>
           <Col>
             <Form.Group className="mb-3" controlId="formINputDate">
               <Form.Label>Data de efetuação:</Form.Label>
-              <Form.Control required name="data_transection" type="date" value={values.data_transection} onChange={onChangeEvent} />
+              <Form.Control required name="date_transaction" type="date" value={values.date_transaction} onChange={onChangeEvent} />
             </Form.Group>
           </Col>
           <Col></Col>
