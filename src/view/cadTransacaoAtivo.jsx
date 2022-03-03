@@ -49,7 +49,21 @@ const TransactionSecurity = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     const method = id ? "put" : "post";
-    
+    if (!id) {
+      const cash_values = {
+        desc_transaction: values.desc_transaction, 
+        value_transaction: (Number(values.value_transaction) * Number(values.quantity) * -1), 
+        date_transaction: values.date_transaction, 
+        fund_id: values.fund_id
+      }
+      axios.post(`http://localhost:3001/cash_transactions.json`, {cash_transaction: cash_values}) 
+        .then((response) => {
+          navigate("/transacaoCaixa")
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }     
     axios[method](`http://localhost:3001/securitys_transactions${id ? `/${id}` : ''}.json`, {security_transactions: values}) 
       .then((response) => {
         navigate("/transacaoAtivos") 
@@ -57,7 +71,6 @@ const TransactionSecurity = () => {
       .catch((err) => {
         console.log(err);
       });
-    // vai ter aqui, um cadastro na tabela
   }
 
   return (
