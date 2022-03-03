@@ -12,8 +12,6 @@ import CPrice from '../view/cadPrecoAtivos.jsx';
 import LPrice from '../view/ListaPreco.jsx';
 import FundReports from '../view/FundReports.jsx';
 import Container from "react-bootstrap/Container";
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import MyNavBar from "../components/MyNavBar.jsx";
 
 const Rotas = () => {

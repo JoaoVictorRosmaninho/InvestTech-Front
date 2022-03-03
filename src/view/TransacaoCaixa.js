@@ -2,7 +2,6 @@ import axios from 'axios';
 import React, {useMemo} from "react";
 import Table from "../components//Table.jsx"
 import CurrencyFormat from 'react-currency-format';
-import { useNavigate } from 'react-router-dom'
 import Buttons from '../components/Buttons.jsx'
 
 const baseUrl = "http://localhost:3001/transacaoCaixa"; 
@@ -10,7 +9,6 @@ const baseUrl = "http://localhost:3001/transacaoCaixa";
 
 function TransacaoCaixa() {
  const [data, setData] = React.useState([]);
- const navigate = useNavigate();
  const columns = useMemo(
             () => [{Header: "InvestTech", 
             columns: [ 

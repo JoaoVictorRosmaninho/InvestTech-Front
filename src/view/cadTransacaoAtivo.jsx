@@ -57,6 +57,7 @@ const TransactionSecurity = () => {
       .catch((err) => {
         console.log(err);
       });
+    // vai ter aqui, um cadastro na tabela
   }
 
   return (
