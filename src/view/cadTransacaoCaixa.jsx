@@ -6,6 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import axios from "axios";
+import AsyncSelect from 'react-select/async';
 
 /* values to send to the api*/
 const initialValue = {desc_transaction: "", value_transaction: "", date_transaction: "",  fund_id: ""};

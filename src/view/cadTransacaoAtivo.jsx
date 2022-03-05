@@ -6,12 +6,40 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import axios from "axios";
-import Select from 'react-select';
+import AsyncSelect from 'react-select/async';
+
+
 
 /* values to send to the api*/
 const initialValue = {desc_transaction: "", value_transaction: "", date_transaction: "",  fund_id: "", security_id: "", quantity: ""};
 
-const today = new Date();
+
+const loadOptions = (Url, name) => {
+  return axios
+    .get(Url)
+      .then((resp) => {
+          const options = [];
+          const data = Array.from(resp.data);
+          data.map((element) => {
+            options.push({label: element[name], value: element.id})
+          }) 
+          return options;       
+      })      
+}
+
+const loadPrice = (value) => {
+  const today = new Date();
+  const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+ (today.getDate() - 1);
+  return axios 
+    .get(`http://localhost:3001/precoAtivos/${value}/${date}`)
+      .then((resp) => {
+          const data = Array.from(resp.data);
+          return data;
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+}
 
 const TransactionSecurity = () => {
   const [values, setValues] = useState(initialValue);
@@ -21,7 +49,6 @@ const TransactionSecurity = () => {
   const navigate = useNavigate();
   const {id} = useParams() || null;
   const buttonText = id ? "Atualizar" : "Cadastrar"; 
-  let t;
 
   useEffect(() => {
     if (id) {
@@ -33,44 +60,28 @@ const TransactionSecurity = () => {
           console.log(err);
         })
     }
-    axios
-      .get("http://localhost:3001/funds")
-        .then((resp) => { setFunds(resp.data); })
-        .catch((err) => { console.log(err); });
-    axios
-      .get("http://localhost:3001/securities")
-        .then((resp) => { setSecuritys(resp.data); })
-        .catch((err) => { console.log(err); });
     }, []);
-let aux;
 
-  const onChangeEvent = (e) => {
-    const {name, value} = e.target
-    setValues({...values, [name]:value});
+  const onChangeEvent = (e, name) => {
+    if(name) {
+      if (name == "security_id") {
+        const aux = loadPrice(e.value);
+        aux.then((resp) => {
+          const valuePrice = resp[0];
+          setValues({...values, value_transaction:valuePrice.closing_price, [name]:e.value});
+        })
+        .catch((err) => {
+          window.alert("Valor com ultimo preço ainda  nao cadastrado")
+        });
+      }
+      else
+        setValues({...values, [name]:e.value});
+    } else {
+      const {name, value} = e.target
+      setValues({...values, [name]:value});
+    }
   } 
-  
-  const loadSecurityValue = () => {
-    const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+ (today.getDate() - 1);
-    axios
-      .get(`http://localhost:3001/precoAtivos/${values.security_id}`)
-        .then((resp) => {
-          setPrice(resp.data);
-        }) 
-        .catch((err) => { console.log(err); });
-    let aux = price[0];
-   /* const newValues = { 
-      desc_transaction: values.desc_transaction, 
-      value_transaction: aux.closing_price, 
-      date_transaction: values.date_transaction,  
-      fund_id: values.fund_id, 
-      security_id: values.security_id, 
-      quantity: values.quantity
-    }; */
 
-    setValues(values, {value_transaction: aux.closing_price});  
-   
-  }
-  
   const onSubmit = (e) => {
     e.preventDefault();
     const method = id ? "put" : "post";
@@ -86,17 +97,16 @@ let aux;
         .catch((err) => {
           console.log(err);
         });
-    }
-    loadSecurityValue();     
-    /*axios[method](`http://localhost:3001/securitys_transactions${id ? `/${id}` : ''}.json`, {security_transactions: values}) 
+    }    
+    axios[method](`http://localhost:3001/securitys_transactions${id ? `/${id}` : ''}.json`, {security_transactions: values}) 
       .then((response) => {
         navigate("/transacaoAtivos") 
       })
       .catch((err) => {
         console.log(err);
-      });*/
+      });
   }
-  console.log(values);
+  console.log(values)
   return (
   <Container fluid="sm" className="mt-4">
       <Form>
@@ -124,38 +134,29 @@ let aux;
         </Row>
         <Row>
           <Col>
-            <Form.Group className="mb-3">
-              <Form.Label htmlFor="disabledSelect">Selecione o Fundo</Form.Label>
-              <Form.Select id="disabledSelect" name="fund_id" onChange={onChangeEvent}> 
-                <option>Selecione o fundo</option>
-                {funds.map((e) => {
-                    if (id) {
-                        if (values.fund_id == e.id)
-                          return (<option value={e.id} name="fund_id" selected>{e.name_fund}</option>)
-                    }
-                    return (<option value={e.id} name="fund_id">{e.name_fund}</option>)
-                })}
-              </Form.Select>
-            </Form.Group>
+          <Form.Group className="mb-3" controlId="formINputDate">
+              <Form.Label>Selecione um Fundo</Form.Label>
+              <AsyncSelect 
+                cacheOptions 
+                defaultOptions 
+                onChange={(e) => onChangeEvent(e, "fund_id")} 
+                loadOptions={() => loadOptions("http://localhost:3001/funds", "name_fund")}/>
+          </Form.Group>
           </Col>
           <Col></Col>
           <Col></Col>
          </Row>
         <Row>
           <Col>
-            <Form.Group className="mb-3">
-              <Form.Label htmlFor="disabledSelect">Selecione o Ativo</Form.Label>
-              <Form.Select id="disabledSelect" name="security_id" onChange={onChangeEvent}> 
-                <option>Selecione o Ativo</option>
-                {security.map((e) => {
-                    if (id) {
-                      if (e.id == values.security_id) 
-                        return (<option value={e.id} selected name="security_id">{e.security_simbol}</option>) 
-                    }
-                    return (<option value={e.id} name="security_id">{e.security_simbol}</option>)
-                })}
-              </Form.Select>
-            </Form.Group>
+          {values.fund_id &&  <Form.Group className="mb-3" controlId="formINputDate">
+              <Form.Label>Selecione um Ativo</Form.Label>
+                <AsyncSelect 
+                  cacheOptions 
+                  defaultOptions 
+                  onChange={(e) => onChangeEvent(e, "security_id")} 
+                  loadOptions={() => loadOptions("http://localhost:3001/securities", "security_simbol")} 
+                />
+          </Form.Group>}
           </Col>
           <Col></Col>
           <Col></Col>
@@ -171,3 +172,8 @@ let aux;
 }
 
 export default TransactionSecurity;
+/*
+      
+
+
+*/
