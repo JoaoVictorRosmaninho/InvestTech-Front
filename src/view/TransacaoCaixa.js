@@ -13,7 +13,7 @@ function TransacaoCaixa() {
             () => [{Header: "InvestTech", 
             columns: [ 
               {Header: "N°", accessor: "id",  Cell: ({row}) => (Number(row.id) + 1)}, 
-              {Header: "Fundo", accessor: "name_fund"}, 
+              {Header: "Fundo", accessor: "fund.name_fund"}, 
               {Header: "Descrição: ", accessor: "desc_transaction"},  
               {Header: "Valor da Transação", accessor: "value_transaction", Cell:  ({row}) => (<CurrencyFormat value={row.values.value_transaction} displayType={'text'} thousandSeparator={true} prefix={'R$'} />)}, 
               {Header: "Data: ", accessor: "date_transaction"},  

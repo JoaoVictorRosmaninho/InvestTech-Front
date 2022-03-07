@@ -6,16 +6,26 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import axios from "axios";
+import AsyncSelect from 'react-select/async';
 
 /* values to send to the api*/
 const initialValue = {closing_price: "", date_closing: "", security_id: ""};
 
-/* Link do request the api*/
-const baseUrl = "http://localhost:3001/securities"; 
+const loadOptions = (Url, name) => {
+  return axios
+    .get(Url)
+      .then((resp) => {
+          const options = [];
+          const data = Array.from(resp.data);
+          data.map((element) => {
+            options.push({label: element[name], value: element.id})
+          }) 
+          return options;       
+      })      
+}
 
 const CadPrecoAtivo = () => {
   const [values, setValues] = useState(initialValue);
-  const [data, setData] = useState([]);
   const navigate = useNavigate();
   const { id } = useParams();
   const buttonText = id ? "Atualizar" : "Cadastrar"; 
@@ -30,18 +40,18 @@ const CadPrecoAtivo = () => {
           console.log(err);
         });
     }
-    axios
-      .get(baseUrl)
-        .then((resp) => { setData(resp.data); })
-        .catch((err) => { console.log(err); });
   }, []);
 
-  console.log(data);
+  console.log(values);
   
-  const onChangeEvent = (e) => {
-    const {name, value} = e.target
-    setValues({...values, [name]:value});
-  }
+  const onChangeEvent = (e, name) => {
+    if(name) {
+      setValues({...values, [name]:e.value});
+    } else {
+      const {name, value} = e.target
+      setValues({...values, [name]:value});
+    }
+  } 
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -78,17 +88,12 @@ const CadPrecoAtivo = () => {
           <Col>
             <Form.Group className="mb-3">
               <Form.Label htmlFor="disabledSelect">Selecione o Ativo</Form.Label>
-              <Form.Select id="disabledSelect" name="security_id" onChange={onChangeEvent}>
-                <option>Selecione um Ativo</option>
-                {data.map((e) => {
-                if (id) {
-                  if (e.id == values.security_id) 
-                    return (<option value={e.id} selected name="security_id">{e.security_simbol}</option>) 
-                 }
-                 return (<option value={e.id} name="security_id">{e.security_simbol}</option>)
-                })}
-              </Form.Select>
-            </Form.Group>
+                <AsyncSelect 
+                  cacheOptions 
+                  defaultOptions 
+                  onChange={(e) => onChangeEvent(e, "security_id")} 
+                  loadOptions={() => loadOptions("http://localhost:3001/securities", "security_simbol")}/>
+              </Form.Group>
           </Col>
           <Col></Col>
           <Col></Col>

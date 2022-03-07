@@ -7,9 +7,6 @@ import Buttons from '../components/Buttons.jsx'
 
 const baseUrl = "http://localhost:3001/transacaoAtivos"; 
 
-  
-
-
 function TransacaoAtivo() {
  const [data, setData] = React.useState([]);
  const navigate = useNavigate();
@@ -17,11 +14,11 @@ function TransacaoAtivo() {
             () => [{Header: "InvestTech", 
               columns: [ 
                 {Header: "N°", accessor: "id",  Cell: ({row}) => (Number(row.id) + 1)}, 
-                {Header: "Fundo", accessor: "name_fund"}, 
+                {Header: "Fundo", accessor: "fund.name_fund"}, 
                 {Header: "Descrição: ", accessor: "desc_transaction"}, 
                 {Header: "Valor", accessor: "value_transaction", Cell: ({row}) => (<CurrencyFormat value={row.values.value_transaction} displayType={'text'} thousandSeparator={true} prefix={'R$'} />)}, 
-                {Header: "Quantidade", accessor: "quantity"}, 
-                {Header: "Simbolo", accessor: "security_simbol"}, 
+                {Header: "Quantidade", accessor: "quantity", }, 
+                {Header: "Simbolo", accessor: "security.security_simbol"}, 
                 {Header: "Data: ", accessor: "date_transaction"}, 
                 {Header: "Total ", Cell: ({row})  => 
                   (

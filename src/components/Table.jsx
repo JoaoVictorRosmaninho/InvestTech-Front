@@ -2,7 +2,7 @@ import BTable from 'react-bootstrap/Table';
 import { useTable, useFilters, useGlobalFilter} from 'react-table';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
-import axios from 'axios';
+import React from 'react';
 
 function GlobalFilter({filter, setFilter}) {
   return (
@@ -11,13 +11,13 @@ function GlobalFilter({filter, setFilter}) {
   )
 }
 
-function Table({ columns, data, Del, Nav }) {
-  const { getTableProps, headerGroups, rows, prepareRow, state, setGlobalFilter } = useTable({
+function Table({ columns, data}) {
+  const { getTableProps, headerGroups, rows, prepareRow, state, setGlobalFilter,  } = useTable({
     columns,
     data,
   }, useGlobalFilter); 
 
-  const { globalFilter } = state;
+  const { globalFilter, filter } = state;
   
   return (
   <Container fluid="sm">

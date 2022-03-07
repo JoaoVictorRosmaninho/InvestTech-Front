@@ -15,7 +15,7 @@ function TransacaoCaixa() {
             () => [{Header: "InvestTech", 
             columns: [ 
               {Header: "N°", accessor: "id",  Cell: ({row}) => (Number(row.id) + 1)}, 
-              {Header: "Ativo", accessor: "security_simbol"}, 
+              {Header: "Ativo", accessor: "security.security_simbol"}, 
               {Header: "Valor", accessor: "closing_price", Cell: ({row}) => (<CurrencyFormat value={row.values.closing_price} displayType={'text'} thousandSeparator={true} prefix={'R$'} />)}, 
               {Header: "Data: ", accessor: "date_closing"},  
               {Header: "Ações", Cell: ({row}) => ( <Buttons id={row.values.id} nav="/Ativos/precos" sendTo="securitys_closing_prices"/> )}

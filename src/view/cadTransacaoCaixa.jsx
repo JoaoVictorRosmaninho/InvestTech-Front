@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState } from 'react'; 
 import { useNavigate, useParams } from 'react-router-dom'
 import Form from 'react-bootstrap/Form'
 import Container from 'react-bootstrap/Container';
@@ -11,17 +11,28 @@ import AsyncSelect from 'react-select/async';
 /* values to send to the api*/
 const initialValue = {desc_transaction: "", value_transaction: "", date_transaction: "",  fund_id: ""};
 
-/* Link do request the api*/
-const baseUrl = "http://localhost:3001/fundos"; 
+
+const loadOptions = (Url, name) => {
+  return axios
+    .get(Url)
+      .then((resp) => {
+          const options = [];
+          const data = Array.from(resp.data);
+          data.map((element) => {
+            options.push({label: element[name], value: element.id})
+          }) 
+          return options;       
+      })      
+}
+
 
 const FundCreation = () => {
   const [values, setValues] = useState(initialValue);
-  const [data, setData] = useState([]);
   const navigate = useNavigate();
   const { id } = useParams();
   const buttonText = id ? "Atualizar" : "Cadastrar"; 
 
-  useEffect(() => {
+  React.useEffect(() => {
     if(id) {
       axios.get(`http://localhost:3001/cash_transactions/${id}.json`)
         .then((resp) => {
@@ -31,18 +42,16 @@ const FundCreation = () => {
           console.log(err);
         });
     }
-    axios
-      .get(baseUrl)
-        .then((resp) => { setData(resp.data); })
-        .catch((err) => { console.log(err); });
   }, []);
-
-  console.log(data);
   
-  const onChangeEvent = (e) => {
-    const {name, value} = e.target
-    setValues({...values, [name]:value});
-  }
+  const onChangeEvent = (e, name) => {
+    if(name) {
+      setValues({...values, [name]:e.value});
+    } else {
+      const {name, value} = e.target
+      setValues({...values, [name]:value});
+    }
+  } 
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -86,16 +95,11 @@ const FundCreation = () => {
           <Col>
             <Form.Group className="mb-3">
               <Form.Label htmlFor="disabledSelect">Selecione o Fundo</Form.Label>
-              <Form.Select id="disabledSelect" name="fund_id" onChange={onChangeEvent}>
-                <option>Selecione o fundo</option>
-                {data.map((e) => {
-                if (id) {
-                  if (e.id == values.fund_id) 
-                    return (<option value={e.id} selected name="fund_id">{e.name_fund}</option>) 
-                 }
-                 return (<option value={e.id} name="fund_id">{e.name_fund}</option>)
-                })}
-              </Form.Select>
+              <AsyncSelect 
+                cacheOptions 
+                defaultOptions 
+                onChange={(e) => onChangeEvent(e, "fund_id")} 
+                loadOptions={() => loadOptions("http://localhost:3001/funds", "name_fund")}/>
             </Form.Group>
           </Col>
           <Col></Col>
