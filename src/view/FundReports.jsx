@@ -78,7 +78,7 @@ const FundReports = () => {
     
     auxDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+ (today.getDate() + 1);
     axios
-      .get(`http://localhost:3001/portifolios/pl/${id}/${today}`)
+      .get(`http://localhost:3001/portifolios/pl/${id}/${auxDate}`)
         .then((resp) => { setPl(resp.data); })
         .catch((err) => { console.log(err); }); 
 
