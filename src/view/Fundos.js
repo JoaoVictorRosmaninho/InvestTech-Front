@@ -1,6 +1,6 @@
 import axios from 'axios';
-import React, {useMemo} from "react";
-import Table from "../components/Table.jsx"
+import React from "react";
+import MaterialTable from 'material-table'
 import { useNavigate, Link } from 'react-router-dom'
 import Buttons from '../components/Buttons.jsx'
 
@@ -9,23 +9,15 @@ const baseUrl = "http://localhost:3001/fundos";
 function Fundos() {
  const [data, setData] = React.useState([]);
  const navigate = useNavigate();
- const columns = useMemo(
-            () => 
-   [
-     {
-       Header: "InvestTech",
-              columns: 
+ const columns = 
               [ 
-                {Header: "N°", accessor: "id",  Cell: ({row}) => (Number(row.id) + 1)}, 
-                {Header: "Fundo", accessor: "name_fund", 
-                 Cell: ({row}) => (<Link to={`/Fundos/demonstrativo/${row.values.id}`}>{row.values.name_fund}</Link>)
+                {title: "Fundo", field: "name_fund", 
+                render: rowData => (<Link to={`/Fundos/demonstrativo/${rowData.id}`}>{rowData.name_fund}</Link>)
                 }, 
-                {Header: "Descricao", accessor: "desc_fund"}, 
-                {Header: "Data de Cadastro", accessor: "creation_date"}, 
-                {Header: "Ações", Cell: ({row}) => ( <Buttons id={row.values.id} nav="/Fundos" sendTo="funds"/> )}
+                {title: "Descricao", field: "desc_fund"}, 
+                {title: "Data de Cadastro", field: "creation_date"}, 
+                {title: "Ações", render: rowData => ( <Buttons id={rowData.id} nav="/Fundos" sendTo="funds"/> )}
               ]
-     }
-   ], []);
 
 
   React.useEffect(() => {
@@ -40,7 +32,7 @@ function Fundos() {
   }, []);
 
   return (
-      <Table columns={columns} data={data} /> 
+    <MaterialTable  data={data} columns={columns} title="Transações de Caixa" />
   );
 }
 
