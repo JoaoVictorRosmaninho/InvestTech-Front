@@ -3,6 +3,7 @@ import React from "react";
 import MaterialTable from 'material-table'
 import CurrencyFormat from 'react-currency-format';
 import Buttons from '../components/Buttons.jsx'
+import { tableIcons } from '../header/icons.js'
 
 const baseUrl = "http://localhost:3001/transacaoCaixa"; 
 
@@ -10,11 +11,11 @@ const baseUrl = "http://localhost:3001/transacaoCaixa";
 function TransacaoCaixa() {
  const [data, setData] = React.useState([]);
  const columns = [
-              {title: "Fundo", field: "fund.name_fund"}, 
-              {title: "Descrição: ", field: "desc_transaction"},  
-              {title: "Valor da Transação", field: "value_transaction", render: rowData => (<CurrencyFormat value={rowData.value_transaction} displayType={'text'} thousandSeparator={true} prefix={'R$'} />)}, 
-              {title: "Data: ", field: "date_transaction"},  
-              {title: "Ações", align: "center" , render: rowData => ( <Buttons id={rowData.id} nav="/transacaoCaixa" sendTo="transacaoCaixa"/> )}
+              {title: "Fundo", field: "fund.name_fund", align: "center"}, 
+              {title: "Descrição: ", field: "desc_transaction", align: "center"},  
+              {title: "Valor da Transação", field: "value_transaction", align: "center",  render: rowData => (<CurrencyFormat value={rowData.value_transaction} displayType={'text'} thousandSeparator={true} prefix={'R$'} />)}, 
+              {title: "Data: ", field: "date_transaction", align: "center"},  
+              {title: "Ações", align: "center", align: "center" , render: rowData => ( <Buttons id={rowData.id} nav="/transacaoCaixa" sendTo="transacaoCaixa"/> )}
             ];
    
   React.useEffect(() => {
@@ -29,7 +30,7 @@ function TransacaoCaixa() {
   }, []);
 
   return (
-    <MaterialTable  data={data} columns={columns} title="Transações de Caixa" />
+    <MaterialTable  icons={tableIcons}  data={data} columns={columns} title="Transações de Caixa" />
   );
 }
 

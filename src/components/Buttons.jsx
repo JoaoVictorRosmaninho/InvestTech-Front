@@ -28,7 +28,7 @@ const Buttons = (props) => {
   return (
     <Container fluid="sm">
     <Row className="justify-content-sm-center">
-      <Col sm={4}><Button variant="primary" value={props.id} onClick={(e) => Nav(e.target.value)}>Editar</Button></Col>
+      <Col sm={4}><Button Style="margin-right: 140px;" variant="primary" value={props.id} onClick={(e) => Nav(e.target.value)}>Editar</Button></Col>
       <Col sm={4}><Button variant="danger" className="ml-3" value={props.id} onClick={(e) => {Del(e.target.value)}}>Apagar</Button></Col>
     </Row>
     </Container>

@@ -1,26 +1,21 @@
 import axios from 'axios';
 import React, {useMemo} from "react";
-import Table from "../components//Table.jsx"
+import MaterialTable from 'material-table'
 import Buttons from '../components/Buttons.jsx'
 import CurrencyFormat from 'react-currency-format';
-import { useNavigate } from 'react-router-dom'
+import { tableIcons } from '../header/icons.js'
 
 const baseUrl = "http://localhost:3001/precos/historico"; 
 
 
 function TransacaoCaixa() {
  const [data, setData] = React.useState([]);
- const navigate = useNavigate();
- const columns = useMemo(
-            () => [{Header: "InvestTech", 
-            columns: [ 
-              {Header: "N°", accessor: "id",  Cell: ({row}) => (Number(row.id) + 1)}, 
-              {Header: "Ativo", accessor: "security.security_simbol"}, 
-              {Header: "Valor", accessor: "closing_price", Cell: ({row}) => (<CurrencyFormat value={row.values.closing_price} displayType={'text'} thousandSeparator={true} prefix={'R$'} />)}, 
-              {Header: "Data: ", accessor: "date_closing"},  
-              {Header: "Ações", Cell: ({row}) => ( <Buttons id={row.values.id} nav="/Ativos/precos" sendTo="securitys_closing_prices"/> )}
-            ]
-            }], []);
+ const columns = [  
+              {title: "Ativo", field: "security.security_simbol"}, 
+              {title: "Valor", field: "closing_price", render: rowData => (<CurrencyFormat value={rowData.closing_price} displayType={'text'} thousandSeparator={true} prefix={'R$'} />)}, 
+              {title: "Data: ", field: "date_closing"},  
+              {title: "Ações", render: rowData => ( <Buttons id={rowData.id} nav="/Ativos/precos" sendTo="securitys_closing_prices"/> )}
+            ];
   
   React.useEffect(() => {
     axios
@@ -34,7 +29,7 @@ function TransacaoCaixa() {
   }, []);
 
   return (
-      <Table columns={columns} data={data} /> 
+      <MaterialTable icons={tableIcons}  data={data} columns={columns} title="Preços Cadastrados" />
   );
 }
 

@@ -7,6 +7,7 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import axios from "axios";
 import AsyncSelect from 'react-select/async';
+import { createFilter } from 'react-select'
 
 
 
@@ -40,6 +41,9 @@ const loadPrice = (value) => {
         console.log(err);
       })
 }
+
+
+
 
 const TransactionSecurity = () => {
   const [values, setValues] = useState(initialValue);
@@ -103,10 +107,10 @@ const TransactionSecurity = () => {
         navigate("/transacaoAtivos") 
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err); 
       });
+    
   }
-  console.log(values)
   return (
   <Container fluid="sm" className="mt-4">
       <Form>
@@ -154,7 +158,9 @@ const TransactionSecurity = () => {
                   cacheOptions 
                   defaultOptions 
                   onChange={(e) => onChangeEvent(e, "security_id")} 
-                  loadOptions={() => loadOptions("http://localhost:3001/securities", "security_simbol")} 
+                  loadOptions={() => loadOptions("http://localhost:3001/securities", "security_simbol")}
+                  filterOption={createFilter({ ignoreAccents: false })}
+                  
                 />
           </Form.Group>}
           </Col>
