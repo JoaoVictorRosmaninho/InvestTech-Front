@@ -20,7 +20,7 @@ function TransacaoAtivo() {
                 {title: "Data: ", align: "center",  field: "date_transaction"}, 
                 {title: "Total ", align: "center",  render: rowData => 
                   (
-                    <CurrencyFormat value={Number(rowData.value_transaction) * Number(rowData.quantity)} displayType={'text'} thousandSeparator={true} prefix={'R$'} />
+                    <CurrencyFormat value={Number(Number(rowData.value_transaction) * Number(rowData.quantity)).toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'R$'} />
                   )},
                 {title: "Ações",align: "center",   render: rowData => ( <Buttons margin={140} id={rowData.id} nav="/TransacaoAtivos" sendTo="securitys_transactions"/> )}
               ]

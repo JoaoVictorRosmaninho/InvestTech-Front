@@ -26,7 +26,7 @@ const columnsTransactions =
 [ 
   {title: "Descrição",   field: "desc_transaction"}, 
   {title: "Valor",  field: "value_transaction", 
-  render: rowData => (<CurrencyFormat value={rowData.value_transaction} displayType={'text'} thousandSeparator={true} prefix={'R$'} />)}, 
+  render: rowData => (<CurrencyFormat value={Number(rowData.value_transaction).toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'R$'} />)}, 
   {title: "Data",  field: "date_transaction"}
 ];
 

@@ -92,7 +92,7 @@ const TransactionSecurity = () => {
     if (!id) {
       const cash_values = {
         desc_transaction: values.desc_transaction, 
-        value_transaction: (Number(values.value_transaction) * Number(values.quantity) * -1), 
+        value_transaction: (Number(Number(values.value_transaction) * Number(values.quantity) * -1).toFixed(2)), 
         date_transaction: values.date_transaction, 
         fund_id: values.fund_id
       }
@@ -112,14 +112,9 @@ const TransactionSecurity = () => {
     
   }
   return (
+  <>  
   <Container fluid="sm" className="mt-4">
       <Form>
-        <Row>
-            <Form.Group className="mb-3" controlId="formInputDesc">
-            <Form.Label>Descrição sobre a Transação:</Form.Label>
-            <Form.Control requires name="desc_transaction" type="text" placeholder="Descrição"  value={values.desc_transaction} onChange={onChangeEvent} />
-          </Form.Group>
-        </Row>
         <Row>
             <Form.Group className="mb-3" controlId="formInputDesc">
             <Form.Label>Quantidade:</Form.Label>
@@ -150,23 +145,33 @@ const TransactionSecurity = () => {
           <Col></Col>
           <Col></Col>
          </Row>
+      {values.fund_id &&
+      <div>
         <Row>
           <Col>
-          {values.fund_id &&  <Form.Group className="mb-3" controlId="formINputDate">
-              <Form.Label>Selecione um Ativo</Form.Label>
-                <AsyncSelect 
-                  cacheOptions 
-                  defaultOptions 
-                  onChange={(e) => onChangeEvent(e, "security_id")} 
-                  loadOptions={() => loadOptions("http://localhost:3001/securities", "security_simbol")}
-                  filterOption={createFilter({ ignoreAccents: false })}
-                  
-                />
-          </Form.Group>}
+            <Form.Group className="mb-3" controlId="formINputDate">
+                <Form.Label>Selecione um Ativo</Form.Label>
+                  <AsyncSelect 
+                    cacheOptions 
+                    defaultOptions 
+                    onChange={(e) => onChangeEvent(e, "security_id")} 
+                    loadOptions={() => loadOptions("http://localhost:3001/securities", "security_simbol")}
+                    filterOption={createFilter({ ignoreAccents: false })}
+                  />
+            </Form.Group>
           </Col>
           <Col></Col>
           <Col></Col>
-         </Row>
+        </Row>
+          <Row>
+              <Form.Group className="mb-3" controlId="formInputDesc">
+              <Form.Label>Descrição sobre a Transação:</Form.Label>
+              <Form.Control requires name="desc_transaction" type="text" placeholder="Descrição"  value={values.desc_transaction} onChange={onChangeEvent} />
+            </Form.Group>
+          </Row>
+        </div>
+        }
+
         <Row>
           <Button type="submit" onClick={onSubmit}>
             {buttonText}
@@ -174,6 +179,7 @@ const TransactionSecurity = () => {
        </Row>
       </Form>
   </Container>
+  </>
   );
 }
 

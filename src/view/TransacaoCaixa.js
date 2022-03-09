@@ -13,9 +13,9 @@ function TransacaoCaixa() {
  const columns = [
               {title: "Fundo", field: "fund.name_fund", align: "center"}, 
               {title: "Descrição: ", field: "desc_transaction", align: "center"},  
-              {title: "Valor da Transação", field: "value_transaction", align: "center",  render: rowData => (<CurrencyFormat value={rowData.value_transaction} displayType={'text'} thousandSeparator={true} prefix={'R$'} />)}, 
+              {title: "Valor da Transação", field: "value_transaction", align: "center",  render: rowData => (<CurrencyFormat value={Number(rowData.value_transaction).toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'R$'} />)}, 
               {title: "Data: ", field: "date_transaction", align: "center"},  
-              {title: "Ações", align: "center", align: "center" , render: rowData => ( <Buttons id={rowData.id} nav="/transacaoCaixa" sendTo="transacaoCaixa"/> )}
+              {title: "Ações", align: "center", align: "center" , render: rowData => ( <Buttons id={rowData.id} nav="/transacaoCaixa" sendTo="cash_transactions"/> )}
             ];
    
   React.useEffect(() => {

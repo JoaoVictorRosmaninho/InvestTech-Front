@@ -7,6 +7,7 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import axios from "axios";
 import AsyncSelect from 'react-select/async';
+import { createFilter } from 'react-select'
 
 /* values to send to the api*/
 const initialValue = {closing_price: "", date_closing: "", security_id: ""};
@@ -92,7 +93,9 @@ const CadPrecoAtivo = () => {
                   cacheOptions 
                   defaultOptions 
                   onChange={(e) => onChangeEvent(e, "security_id")} 
-                  loadOptions={() => loadOptions("http://localhost:3001/securities", "security_simbol")}/>
+                  loadOptions={() => loadOptions("http://localhost:3001/securities", "security_simbol")}
+                  filterOption={createFilter({ ignoreAccents: false })}
+                  />
               </Form.Group>
           </Col>
           <Col></Col>
