@@ -4,7 +4,8 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button';
-import Table from "../components/Table.jsx"
+import MaterialTable from 'material-table'
+import { tableIcons } from '../header/icons.js'
 import { useParams } from 'react-router-dom'
 import { Chart } from "react-google-charts"
 import CurrencyFormat from 'react-currency-format';
@@ -15,9 +16,24 @@ const options = {
   title: "Composicao da Carteira",
 };
 
+const columnsSecurity = 
+[ 
+  {title: "Ativo", field: "security.security_simbol"}, 
+  {title: "Quantidade",field: "security_quantity"}, 
+];
+
+const columnsTransactions = 
+[ 
+  {title: "Descrição",   field: "desc_transaction"}, 
+  {title: "Valor",  field: "value_transaction", 
+  render: rowData => (<CurrencyFormat value={rowData.value_transaction} displayType={'text'} thousandSeparator={true} prefix={'R$'} />)}, 
+  {title: "Data",  field: "date_transaction"}
+];
+
 
 const FundReports = () => {
   const [security, setSecurity] = React.useState([]);
+  const [transactions, setTransactions] = React.useState([])
   const [fund, setFund] = React.useState([]);
   const [date, setDate] = React.useState("");
   const [yesterday, setYesterday] = React.useState([]);
@@ -28,20 +44,6 @@ const FundReports = () => {
   const { id } = useParams() || null;
   const data = [["Ativos", "quantidade"]];
   
-  const columns = React.useMemo(
-      () => 
-      [
-        {Header: "Ativos", columns: 
-        [ 
-          {Header: "N°", accessor: "id",  Cell: ({row}) => (Number(row.id) + 1)}, 
-          {Header: "Ativo", accessor: "security.security_simbol"}, 
-          {Header: "Quantidade", accessor: "security_quantity"}, 
-        ]}
-
-      ], []
-  );
-
-
 
    React.useEffect(() => {
       axios.get(`http://localhost:3001/funds/${id}.json`) 
@@ -63,31 +65,32 @@ const FundReports = () => {
     setBool(true);
     const today = new Date(date.creation_date);
     let auxDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+ (today.getDate() + 1);
-
-     axios
+    
+    axios
+      .get(`http://localhost:3001/portifolios/transacoes/${id}/${auxDate}`)
+        .then((resp) => { setTransactions(resp.data)})
+        .catch((err) => { console.log(err)}); 
+    
+    axios
         .get(`http://localhost:3001/portifolios/ativos/${id}/${auxDate}`)
           .then((resp) => { setSecurity(resp.data); })
-          .catch((err) => { console.log(err); });   
+          .catch((err) => { console.log(err); }); 
+    
+    axios
+        .get(`http://localhost:3001/portifolios/pl/${id}/${auxDate}`)
+          .then((resp) => { setPl(resp.data); })
+          .catch((err) => { console.log(err); }); 
+    
+    axios
+        .get(`http://localhost:3001//portifolios/saldo/${id}/${auxDate}`)
+          .then((resp) => { setToday(resp.data); })
+          .catch((err) => { console.log(err); }); 
    
     auxDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+ (today.getDate());  
     axios
       .get(`http://localhost:3001//portifolios/saldo/${id}/${auxDate}`)
        .then((resp) => { setYesterday(resp.data); })
-        .catch((err) => { console.log(err); });
-  
-    
-    auxDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+ (today.getDate() + 1);
-    axios
-      .get(`http://localhost:3001/portifolios/pl/${id}/${auxDate}`)
-        .then((resp) => { setPl(resp.data); })
-        .catch((err) => { console.log(err); }); 
-
-   
-    axios
-      .get(`http://localhost:3001//portifolios/saldo/${id}/${auxDate}`)
-        .then((resp) => { setToday(resp.data); })
-        .catch((err) => { console.log(err); }); 
-    
+        .catch((err) => { console.log(err); });   
    
     auxDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+ (today.getDate() + 2);
     axios
@@ -99,7 +102,6 @@ const FundReports = () => {
     security.map((e) => {
       data.push([e.security.security_simbol, e.security_quantity]);
     })
-    console.log(security)
 
     return (
       <>
@@ -120,13 +122,19 @@ const FundReports = () => {
             <Col>          
               <Button type="submit" onClick={onClick}>
                 Atualizar
-            </Button>
+              </Button>
             </Col>
-            <Col></Col>
           </Row> 
         </Container>  
         {bool && 
         <Container>
+          <Row className="mt-03">
+            <Col>
+                <Button type="submit" variant="warning" onClick={onClick}>
+                    Exportar para a BlockChain
+                </Button>
+            </Col> 
+          </Row>
           <Row className="mt-4">
             <Col>
               <Chart
@@ -144,8 +152,21 @@ const FundReports = () => {
             <Col>D0: {dtoday.map((e) => (<strong><CurrencyFormat value={e.balance} displayType={'text'} thousandSeparator={true} prefix={'R$ '}/></strong>))} </Col>
             <Col>D1: {tomorrow.map((e) => (<strong><CurrencyFormat value={e.balance} displayType={'text'} thousandSeparator={true} prefix={'R$ '}/></strong>))}</Col>
           </Row>
-          <Row>
-            <Table columns={columns} data={security} /> 
+          <Row className="mt-4">
+            <MaterialTable 
+              icons={tableIcons}  
+              data={security} 
+              columns={columnsSecurity} 
+              title="Carteira" 
+            />
+          </Row>
+          <Row className="mt-4">
+            <MaterialTable 
+              icons={tableIcons}  
+              data={transactions} 
+              columns={columnsTransactions} 
+              title="Movimentações de Caixa" 
+            />
           </Row>
       </Container>}
       </>
