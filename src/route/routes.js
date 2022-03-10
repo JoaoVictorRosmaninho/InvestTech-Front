@@ -24,6 +24,7 @@ const Rotas = () => {
         <Route element={<Fundos/>} path="/Fundos" /> 
         <Route element={<CFundos/>} path="/Fundos/new" /> 
         <Route element={<CFundos/>} path="/Fundos/edit/:id" /> 
+        <Route element={<FundReports/>} path="/Fundos/demonstrativos"/> 
         
         <Route element={<TransacaoCaixa/>} path="/transacaoCaixa" /> 
         <Route element={<CTransacaoCaixa/>} path="/transacaoCaixa/new" /> 
@@ -40,7 +41,7 @@ const Rotas = () => {
         <Route element={<CPrice/>} path="/Ativos/precos/new" /> 
         <Route element={<LPrice/>} path="/Ativos/precos" /> 
         
-        <Route element={<FundReports/>} path="/Fundos/demonstrativo/:id"/> 
+        
     
       </Routes>
     </Container>

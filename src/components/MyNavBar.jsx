@@ -15,7 +15,7 @@ function MyNavBar() {
             <NavDropdown title="Fundos" id="basic-nav-dropdown">
               <NavDropdown.Item href="/Fundos/new">Cadastrar Fundos</NavDropdown.Item>
               <NavDropdown.Item href="/Fundos">Listar Fundos</NavDropdown.Item>
-              <NavDropdown.Item href="/Fundos">Relatórios</NavDropdown.Item>
+              <NavDropdown.Item href="/Fundos/demonstrativos">Relatórios</NavDropdown.Item>
             </NavDropdown>
             <NavDropdown title="Transações Caixa" id="basic-nav-dropdown">
               <NavDropdown.Item href="/transacaoCaixa/new">

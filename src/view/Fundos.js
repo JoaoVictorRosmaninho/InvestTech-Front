@@ -12,9 +12,7 @@ function Fundos() {
  const navigate = useNavigate();
  const columns = 
               [ 
-                {title: "Fundo", field: "name_fund", align: "center",
-                render: rowData => (<Link to={`/Fundos/demonstrativo/${rowData.id}`}>{rowData.name_fund}</Link>)
-                }, 
+                {title: "Fundo", field: "name_fund", align: "center" }, 
                 {title: "Descricao", field: "desc_fund", align: "center"}, 
                 {title: "Data de Cadastro", field: "creation_date", align: "center"}, 
                 {title: "Ações", align: "center" ,  render: rowData => ( <Buttons id={rowData.id} nav="/Fundos" sendTo="funds"/> )}

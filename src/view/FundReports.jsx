@@ -10,6 +10,21 @@ import { useParams } from 'react-router-dom'
 import { Chart } from "react-google-charts"
 import CurrencyFormat from 'react-currency-format';
 import axios from "axios";
+import AsyncSelect from 'react-select/async';
+
+
+const loadOptions = (Url, name) => {
+  return axios
+    .get(Url)
+      .then((resp) => {
+          const options = [];
+          const data = Array.from(resp.data);
+          data.map((element) => {
+            options.push({label: element[name], value: element.id})
+          }) 
+          return options;       
+      })      
+}
 
 
 const options = {
@@ -18,16 +33,18 @@ const options = {
 
 const columnsSecurity = 
 [ 
-  {title: "Ativo", field: "security.security_simbol"}, 
-  {title: "Quantidade",field: "security_quantity"}, 
+  {title: "Ativo", align: "center", field: "security.security_simbol"}, 
+  {title: "Quantidade", align: "center", field: "security_quantity"}, 
+  {title: "Preço de compra", align: "center", field: "securitys_closing_prices.closing_price",
+  render: rowData => (<CurrencyFormat value={rowData.securitys_closing_prices.closing_price} displayType={'text'} thousandSeparator={true} prefix={'R$'} />)} 
 ];
 
 const columnsTransactions = 
 [ 
-  {title: "Descrição",   field: "desc_transaction"}, 
-  {title: "Valor",  field: "value_transaction", 
+  {title: "Descrição", align: "center",field: "desc_transaction"}, 
+  {title: "Valor", align: "center",field: "value_transaction", 
   render: rowData => (<CurrencyFormat value={Number(rowData.value_transaction).toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'R$'} />)}, 
-  {title: "Data",  field: "date_transaction"}
+  {title: "Data", align: "center", field: "date_transaction"}
 ];
 
 
@@ -42,10 +59,10 @@ const FundReports = () => {
   const [pl, setPl] = React.useState([]);
   const [bool, setBool] = React.useState(false);
   const { id } = useParams() || null;
-  const data = [["Ativos", "quantidade"]];
+  const data = [["Ativos", "quantidade", "preçoVenda"]];
   
 
-   React.useEffect(() => {
+/*   React.useEffect(() => {
       axios.get(`http://localhost:3001/funds/${id}.json`) 
       .then((resp) => {
         setFund(resp.data);
@@ -53,81 +70,105 @@ const FundReports = () => {
         .catch((err) => {
         console.log("Error: ", err); 
      });    
-  }, []);
+  }, []);*/
+
+  const onChangeEvent = (e, name) => {
+    if(name) {
+      setFund({...fund, [name]:e.value});
+    } else {
+      const {name, value} = e.target
+      setDate({...date, [name]:value});
+    }
+  } 
 
 
-  const onChangeEvent = (e) => {
-    const {name, value} = e.target
-    setDate({...date, [name]:value});
-  }
 
   const onClick = (e) => {
     setBool(true);
     const today = new Date(date.creation_date);
     let auxDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+ (today.getDate() + 1);
-    
+
+    axios.get(`http://localhost:3001/funds/${fund.fund_id}.json`) 
+      .then((resp) => {
+        setFund(resp.data);
+      })
+        .catch((err) => {
+        console.log("Error: ", err); 
+     });    
+
     axios
-      .get(`http://localhost:3001/portifolios/transacoes/${id}/${auxDate}`)
+      .get(`http://localhost:3001/portifolios/transacoes/${fund.fund_id}/${auxDate}`)
         .then((resp) => { setTransactions(resp.data)})
         .catch((err) => { console.log(err)}); 
     
     axios
-        .get(`http://localhost:3001/portifolios/ativos/${id}/${auxDate}`)
+        .get(`http://localhost:3001/portifolios/ativos/${fund.fund_id}/${auxDate}`)
           .then((resp) => { setSecurity(resp.data); })
           .catch((err) => { console.log(err); }); 
     
     axios
-        .get(`http://localhost:3001/portifolios/pl/${id}/${auxDate}`)
+        .get(`http://localhost:3001/portifolios/pl/${fund.fund_id}/${auxDate}`)
           .then((resp) => { setPl(resp.data); })
           .catch((err) => { console.log(err); }); 
     
     axios
-        .get(`http://localhost:3001//portifolios/saldo/${id}/${auxDate}`)
+        .get(`http://localhost:3001//portifolios/saldo/${fund.fund_id}/${auxDate}`)
           .then((resp) => { setToday(resp.data); })
           .catch((err) => { console.log(err); }); 
    
     auxDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+ (today.getDate());  
     axios
-      .get(`http://localhost:3001//portifolios/saldo/${id}/${auxDate}`)
+      .get(`http://localhost:3001//portifolios/saldo/${fund.fund_id}/${auxDate}`)
        .then((resp) => { setYesterday(resp.data); })
         .catch((err) => { console.log(err); });   
    
     auxDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+ (today.getDate() + 2);
     axios
-      .get(`http://localhost:3001//portifolios/saldo/${id}/${auxDate}`)
+      .get(`http://localhost:3001//portifolios/saldo/${fund.fund_id}/${auxDate}`)
         .then((resp) => { setTomorrow(resp.data); })
         .catch((err) => { console.log(err); }); 
   }
 
     security.map((e) => {
-      data.push([e.security.security_simbol, e.security_quantity]);
+      data.push([e.security.security_simbol, e.security_quantity, e.securitys_closing_prices.closing_price]);
     })
-
+    console.log(security);
     return (
       <>
       <Container className="mt-4" fluid="sm">
           <Row>
-            <Col><h2>{fund.name_fund}</h2></Col>
-          </Row>
-          <Row>
-            
-          </Row>
-          <Row className="mt-4">
-            <Col>
-              <Form.Group className="mb-3" controlId="formINputDate">
-              
-                <Form.Control required name="creation_date" type="date"  onChange={onChangeEvent} />
+            <Col xs={5}>
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="disabledSelect">Selecione o Fundo</Form.Label>
+                <AsyncSelect 
+                  cacheOptions 
+                  defaultOptions 
+                  onChange={(e) => onChangeEvent(e, "fund_id")} 
+                  loadOptions={() => loadOptions("http://localhost:3001/funds", "name_fund")}/>
               </Form.Group>
             </Col>
-            <Col>          
+          </Row>
+          <Row className="mt-1">
+            <Col xs={5}>
+              <Form.Group className="mb-3" controlId="formINputDate">
+                <Form.Label htmlFor="disabledSelect">Até:</Form.Label>
+                <Form.Control required name="creation_date" type="date"  onChange={onChangeEvent} />
+              </Form.Group>
+            </Col>        
+          </Row>
+          <Row>
+            <Col xs={5}>
               <Button type="submit" onClick={onClick}>
-                Atualizar
+                  Atualizar
               </Button>
             </Col>
           </Row> 
         </Container>  
         {bool && 
-        <Container>
+        <Container className="mt-4">
+          <Row>
+            <Col><h2>{fund.name_fund}</h2></Col>
+          </Row>
           <Row className="mt-03">
             <Col>
                 <Button type="submit" variant="warning" onClick={onClick}>

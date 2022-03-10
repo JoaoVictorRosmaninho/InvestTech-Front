@@ -11,10 +11,10 @@ const baseUrl = "http://localhost:3001/precos/historico";
 function TransacaoCaixa() {
  const [data, setData] = React.useState([]);
  const columns = [  
-              {title: "Ativo", field: "security.security_simbol"}, 
-              {title: "Valor", field: "closing_price", render: rowData => (<CurrencyFormat value={rowData.closing_price} displayType={'text'} thousandSeparator={true} prefix={'R$'} />)}, 
-              {title: "Data: ", field: "date_closing"},  
-              {title: "Ações", render: rowData => ( <Buttons id={rowData.id} nav="/Ativos/precos" sendTo="securitys_closing_prices"/> )}
+              {title: "Ativo", field: "security.security_simbol",  align: "center"}, 
+              {title: "Valor", field: "closing_price",  align: "center",  render: rowData => (<CurrencyFormat value={rowData.closing_price} displayType={'text'} thousandSeparator={true} prefix={'R$'} />)}, 
+              {title: "Data: ",  align: "center",  field: "date_closing"},  
+              {title: "Ações",  align: "center",  render: rowData => ( <Buttons id={rowData.id} nav="/Ativos/precos" sendTo="securitys_closing_prices"/> )}
             ];
   
   React.useEffect(() => {
