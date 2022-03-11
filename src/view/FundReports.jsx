@@ -100,11 +100,8 @@ const FundReports = () => {
         signer = provider.getSigner()
         const contract = new ethers.Contract(daiAddress, daiAbi, provider);
         const daiWithSigner = await contract.connect(signer)
-
-      /*  const contract = new ethers.Contract(daiAddress, daiAbi, provider);
-        const daiWithSigner = contract.connect(signer);*/
         const num = Number(date.creation_date.replace(/-/g, ""));
-        await daiWithSigner.addPlByDate(num, pl, Number(fund_id), nameFund);
+        await daiWithSigner.addPlByDate(num, Number.parseInt((pl * 100)), Number(fund_id), nameFund);
     } catch (err) {
         console.log('Deu nao');
         console.log(err);
