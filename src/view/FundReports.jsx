@@ -47,6 +47,10 @@ const columnsTransactions =
   {title: "Data", align: "center", field: "date_transaction"}
 ];
 
+const exportBlockChain = () => {
+  
+} 
+
 
 const FundReports = () => {
   const [security, setSecurity] = React.useState([]);
@@ -73,13 +77,14 @@ const FundReports = () => {
   }, []);*/
 
   const onChangeEvent = (e, name) => {
-    if(name) {
       setFund({...fund, [name]:e.value});
-    } else {
-      const {name, value} = e.target
-      setDate({...date, [name]:value});
-    }
   } 
+  
+  const onChangeDate = (e) => {
+    const {name, value} = e.target
+    setDate({...date, [name]:value});
+  }
+
 
 
 
@@ -87,14 +92,7 @@ const FundReports = () => {
     setBool(true);
     const today = new Date(date.creation_date);
     let auxDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+ (today.getDate() + 1);
-
-    axios.get(`http://localhost:3001/funds/${fund.fund_id}.json`) 
-      .then((resp) => {
-        setFund(resp.data);
-      })
-        .catch((err) => {
-        console.log("Error: ", err); 
-     });    
+    console.log(fund.fund_id)
 
     axios
       .get(`http://localhost:3001/portifolios/transacoes/${fund.fund_id}/${auxDate}`)
@@ -132,7 +130,6 @@ const FundReports = () => {
     security.map((e) => {
       data.push([e.security.security_simbol, e.security_quantity, e.securitys_closing_prices.closing_price]);
     })
-    console.log(security);
     return (
       <>
       <Container className="mt-4" fluid="sm">
@@ -152,7 +149,7 @@ const FundReports = () => {
             <Col xs={5}>
               <Form.Group className="mb-3" controlId="formINputDate">
                 <Form.Label htmlFor="disabledSelect">Até:</Form.Label>
-                <Form.Control required name="creation_date" type="date"  onChange={onChangeEvent} />
+                <Form.Control required name="creation_date" type="date"  onChange={onChangeDate} />
               </Form.Group>
             </Col>        
           </Row>
@@ -171,7 +168,7 @@ const FundReports = () => {
           </Row>
           <Row className="mt-03">
             <Col>
-                <Button type="submit" variant="warning" onClick={onClick}>
+                <Button type="submit" variant="warning" onClick={exportBlockChain}>
                     Exportar para a BlockChain
                 </Button>
             </Col> 
