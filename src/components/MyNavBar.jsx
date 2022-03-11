@@ -36,8 +36,8 @@ function MyNavBar() {
               <NavDropdown.Item href="/Ativos/precos">Histórico de preços</NavDropdown.Item>
             </NavDropdown>
             <NavDropdown title="Blockchain" id="basic-nav-dropdown">
-              <NavDropdown.Item href="/Blockchain">Salvar relatório</NavDropdown.Item>
-              <NavDropdown.Item href="/Ativos">Acessar relatório</NavDropdown.Item>
+              <NavDropdown.Item href="https://rinkeby.etherscan.io/address/0xe07c6f83879b6c05082b092e1dcc9ea5f50e63c2">Listar Transações</NavDropdown.Item>
+              <NavDropdown.Item href="https://rinkeby.etherscan.io/address/0xe07c6f83879b6c05082b092e1dcc9ea5f50e63c2#readContract">Consultar Transação</NavDropdown.Item>
             </NavDropdown>
         </Nav>
     </Navbar.Collapse>
