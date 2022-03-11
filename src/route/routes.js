@@ -10,6 +10,7 @@ import Ativos from '../view/Ativos.jsx';
 import CAtivos from '../view/cadAtivos.jsx';
 import CPrice from '../view/cadPrecoAtivos.jsx';
 import LPrice from '../view/ListaPreco.jsx';
+import BlockChain from '../view/blockchain.jsx';
 import FundReports from '../view/FundReports.jsx';
 import Container from "react-bootstrap/Container";
 import MyNavBar from "../components/MyNavBar.jsx";
@@ -40,6 +41,9 @@ const Rotas = () => {
         <Route element={<CPrice/>} path="/Ativos/precos/edit/:id" /> 
         <Route element={<CPrice/>} path="/Ativos/precos/new" /> 
         <Route element={<LPrice/>} path="/Ativos/precos" /> 
+
+
+        <Route element={<BlockChain/>} path="/Blockchain" />
         
         
     

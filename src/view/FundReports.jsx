@@ -6,11 +6,23 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button';
 import MaterialTable from 'material-table'
 import { tableIcons } from '../header/icons.js'
-import { useParams } from 'react-router-dom'
 import { Chart } from "react-google-charts"
 import CurrencyFormat from 'react-currency-format';
 import axios from "axios";
 import AsyncSelect from 'react-select/async';
+import { ethers } from "ethers";
+
+
+const options = {
+  title: "Composicao da Carteira",
+};
+
+const provider = new ethers.providers.Web3Provider(window.ethereum)
+const daiAddress = "0xe07c6f83879b6c05082b092e1dcc9ea5f50e63c2";
+const daiAbi = [
+  "function getPlByDateId(uint256 _date, uint32 _fundId) public view returns (string memory name, uint256 pl)",
+  "function addPlByDate(uint _date, uint _pl, uint32 _fundId, string memory _name) public",
+];
 
 
 const loadOptions = (Url, name) => {
@@ -26,17 +38,12 @@ const loadOptions = (Url, name) => {
       })      
 }
 
-
-const options = {
-  title: "Composicao da Carteira",
-};
-
 const columnsSecurity = 
 [ 
   {title: "Ativo", align: "center", field: "security.security_simbol"}, 
   {title: "Quantidade", align: "center", field: "security_quantity"}, 
-  {title: "Preço de compra", align: "center", field: "securitys_closing_prices.closing_price",
-  render: rowData => (<CurrencyFormat value={rowData.securitys_closing_prices.closing_price} displayType={'text'} thousandSeparator={true} prefix={'R$'} />)} 
+  {title: "Preço de compra", align: "center", field: "closing_price.closing_price",
+  render: rowData => (<CurrencyFormat value={rowData.closing_price.closing_price} displayType={'text'} thousandSeparator={true} prefix={'R$'} />)} 
 ];
 
 const columnsTransactions = 
@@ -47,34 +54,28 @@ const columnsTransactions =
   {title: "Data", align: "center", field: "date_transaction"}
 ];
 
-const exportBlockChain = () => {
-  
-} 
-
 
 const FundReports = () => {
   const [security, setSecurity] = React.useState([]);
   const [transactions, setTransactions] = React.useState([])
   const [fund, setFund] = React.useState([]);
+  const [name, setName] = React.useState([]);
   const [date, setDate] = React.useState("");
   const [yesterday, setYesterday] = React.useState([]);
   const [dtoday, setToday] = React.useState([]);
   const [tomorrow, setTomorrow] = React.useState([]);
   const [pl, setPl] = React.useState([]);
   const [bool, setBool] = React.useState(false);
-  const { id } = useParams() || null;
+  const [accountBalance, setAccountBalance] = React.useState([]);
   const data = [["Ativos", "quantidade", "preçoVenda"]];
-  
+  let signer;
 
-/*   React.useEffect(() => {
-      axios.get(`http://localhost:3001/funds/${id}.json`) 
-      .then((resp) => {
-        setFund(resp.data);
-      })
-        .catch((err) => {
-        console.log("Error: ", err); 
-     });    
-  }, []);*/
+
+  React.useEffect(async () => {
+    await provider.send("eth_requestAccounts", []);
+    signer = provider.getSigner()
+
+  },[])
 
   const onChangeEvent = (e, name) => {
       setFund({...fund, [name]:e.value});
@@ -85,6 +86,31 @@ const FundReports = () => {
     setDate({...date, [name]:value});
   }
 
+  async function requestDataBlockchain(date, fund_id) {
+    const daiContract = new ethers.Contract(daiAddress, daiAbi, provider);
+    const num = Number(date.replace(/-/g, ""));
+    let result = await daiContract.getPlByDateId(num, Number(fund_id));
+    setAccountBalance(ethers.utils.formatUnits(result, 0));
+  }
+  
+   async function sendDataBlockchain(date, nameFund, fund_id, pl) {   
+    try {
+        let provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        signer = provider.getSigner()
+        const contract = new ethers.Contract(daiAddress, daiAbi, provider);
+        const daiWithSigner = await contract.connect(signer)
+
+      /*  const contract = new ethers.Contract(daiAddress, daiAbi, provider);
+        const daiWithSigner = contract.connect(signer);*/
+        const num = Number(date.creation_date.replace(/-/g, ""));
+        await daiWithSigner.addPlByDate(num, pl, Number(fund_id), nameFund);
+    } catch (err) {
+        console.log('Deu nao');
+        console.log(err);
+    } 
+  }
+
 
 
 
@@ -92,7 +118,12 @@ const FundReports = () => {
     setBool(true);
     const today = new Date(date.creation_date);
     let auxDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+ (today.getDate() + 1);
-    console.log(fund.fund_id)
+
+
+    axios
+      .get(`http://localhost:3001/funds/${fund.fund_id}.json`)
+        .then((resp) => { setName(resp.data)})
+        .catch((err) => { console.log(err)}); 
 
     axios
       .get(`http://localhost:3001/portifolios/transacoes/${fund.fund_id}/${auxDate}`)
@@ -125,10 +156,11 @@ const FundReports = () => {
       .get(`http://localhost:3001//portifolios/saldo/${fund.fund_id}/${auxDate}`)
         .then((resp) => { setTomorrow(resp.data); })
         .catch((err) => { console.log(err); }); 
+   
   }
 
     security.map((e) => {
-      data.push([e.security.security_simbol, e.security_quantity, e.securitys_closing_prices.closing_price]);
+      data.push([e.security.security_simbol, e.security_quantity, e.closing_price.closing_price]);
     })
     return (
       <>
@@ -168,7 +200,8 @@ const FundReports = () => {
           </Row>
           <Row className="mt-03">
             <Col>
-                <Button type="submit" variant="warning" onClick={exportBlockChain}>
+                <Button type="submit" variant="warning" 
+                  onClick={() => {sendDataBlockchain(date, name.name_fund, fund.fund_id, pl.pl)}}>
                     Exportar para a BlockChain
                 </Button>
             </Col> 
@@ -191,7 +224,7 @@ const FundReports = () => {
             <Col>D1: {tomorrow.map((e) => (<strong><CurrencyFormat value={e.balance} displayType={'text'} thousandSeparator={true} prefix={'R$ '}/></strong>))}</Col>
           </Row>
           <Row className="mt-4">
-            <MaterialTable 
+          <MaterialTable 
               icons={tableIcons}  
               data={security} 
               columns={columnsSecurity} 
@@ -212,3 +245,8 @@ const FundReports = () => {
 }
 
 export default FundReports;
+
+/*
+
+
+*/
