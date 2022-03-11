@@ -176,22 +176,18 @@ const FundReports = () => {
                   loadOptions={() => loadOptions("http://localhost:3001/funds", "name_fund")}/>
               </Form.Group>
             </Col>
-          </Row>
-          <Row className="mt-1">
             <Col xs={5}>
               <Form.Group className="mb-3" controlId="formINputDate">
                 <Form.Label htmlFor="disabledSelect">Até:</Form.Label>
                 <Form.Control required name="creation_date" type="date"  onChange={onChangeDate} />
               </Form.Group>
-            </Col>        
-          </Row>
-          <Row>
+            </Col>    
             <Col xs={5}>
               <Button type="submit" onClick={onClick}>
                   Atualizar
               </Button>
-            </Col>
-          </Row> 
+            </Col>    
+          </Row>
         </Container>  
         {bool && 
         <Container className="mt-4">
